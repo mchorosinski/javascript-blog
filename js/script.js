@@ -14,9 +14,11 @@ const titleClickHandler = function (event) {
 
   /* add class 'active' to the clicked link */
 
+
+
   /* remove class 'active' from all articles */
 
-  const activeArticles = document.querySelectorAll('.post active');
+  const activeArticles = document.querySelectorAll('.post.active'); //jak nie ma spacji to spójnik
 
   for (let activeArticle of activeArticles) {
     activeArticle.classList.remove('active');
