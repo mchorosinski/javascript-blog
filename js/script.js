@@ -1,10 +1,11 @@
 'use strict';
 
 const titleClickHandler = function (event) {
+  const clickedElement = this;
   console.log('Link was clicked!');
-  console.log('Argument event funkcji titleClickHandler: ', event)
+  console.log('Argument "event" funkcji (in. handler) "titleClickHandler": ', event);
 
-  /* remove class 'active' from all article links  */
+  /* [DONE] remove class 'active' from all article links  */
 
   const activeLinks = document.querySelectorAll('.titles a.active');
 
@@ -12,11 +13,13 @@ const titleClickHandler = function (event) {
     activeLink.classList.remove('active');
   }
 
-  /* add class 'active' to the clicked link */
+  /* [IN PROGRESS] add class 'active' to the clicked link */
 
+  clickedElement.classList.add('active');
+  console.log('clickedElement:', clickedElement);
+  console.log('clickedElement (with plus): ' + clickedElement);
 
-
-  /* remove class 'active' from all articles */
+  /* [DONE] remove class 'active' from all articles */
 
   const activeArticles = document.querySelectorAll('.post.active'); //jak nie ma spacji to spójnik
 
@@ -29,6 +32,7 @@ const titleClickHandler = function (event) {
   /* find the correct article using the selector (value of 'href' attribute) */
 
   /* add class 'active' to the correct article */
+// eslint-disable-next-line semi
 }
 
 const links = document.querySelectorAll('.titles a');
