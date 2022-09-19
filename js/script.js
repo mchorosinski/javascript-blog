@@ -45,46 +45,39 @@
 
     targetArticle.classList.add('active');
     console.log('Active article:', targetArticle);
+  };
 
-    // eslint-disable-next-line semi
-  }
-  /* Stąd */
-
-
-  const optArticleSelector = '.post',
-    optTitleSelector = '.post-title',
-    optTitleListSelector = '.titles';
+  // Te stałe były tutaj wcześniej i działały z funkcją generateTitleLinks...
+  //const optArticleSelector = '.post'
+    //optTitleSelector = '.post-title',
+    //optTitleListSelector = '.titles',
+    //optArticleTagsSelector = '.post-tags .list';
 
   // eslint-disable-next-line no-inner-declarations
   function generateTitleLinks() {
 
+  // Natomiast te stałe przeniosłem z góry w to miejsce - wewnątrz funkcji.
+  const optArticleSelector = '.post',
+    optTitleSelector = '.post-title',
+    optTitleListSelector = '.titles';
 
-    /* remove contents of titleList */
+    /* [DONE] remove contents of titleList */
 
     const titleList = document.querySelector(optTitleListSelector);
 
-    function clearMessages(){
+    function clearMessages() {
       titleList.innerHTML = '';
     }
     console.log('titleList: ', titleList);
     clearMessages();
 
-    /* find all the articles and save them to variable: articles */
+    /* [DONE] find all the articles and save them to variable: articles */
 
     const articles = document.querySelectorAll(optArticleSelector);
 
     let html = '';
 
-    for(let article of articles){
-
-    /* [DONE] for each article
-
-    const articles = document.querySelectorAll(optArticleSelector);
-
-      for (const article of articles) {
-      console.log('Article: ', article);
-
-    */ // powyższy fragment trzeba było jednak usunąć?!
+    for(let article of articles) {
 
       /* [DONE] get the article id */
 
@@ -96,15 +89,6 @@
       const articleTitle = article.querySelector(optTitleSelector).innerHTML;
       console.log('Article Title: ', articleTitle);
 
-      /* [IN PROGRESS] get the title from the title element
-
-      // ?? nie wiem o co tu chodzi... Wydaje się, że i tak działa ;/
-
-      const titleElement = article.getAttribute(optTitleSelector);
-      console.log('Title from Element: ', titleElement);
-
-      */
-
       /* [DONE] create HTML of the link */
 
       const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
@@ -114,16 +98,62 @@
 
       html = html + linkHTML;
     }
-    console.log('Wyświetla zawartość zmiennej "html": ', html);
+      console.log('Wyświetla zawartość zmiennej "html": ', html);
 
     titleList.innerHTML = html;
 
-      const links = document.querySelectorAll('.titles a');
-      console.log('Co zawiera stała "links": ', links);
+    const links = document.querySelectorAll('.titles a');
+    console.log('Co zawiera stała "links": ', links);
 
-      for (let link of links) {
+    for (let link of links) {
       link.addEventListener('click', titleClickHandler);
-      }
+    }
   }
   generateTitleLinks();
 }
+
+  function generateTags(){
+
+  // dlaczego muszę tutaj znowu ustalać te same stałe? Przecież wyżej zostały już podane (i też poza funkcją)...
+
+  const optArticleSelector = '.post',
+    optArticleTagsSelector = '.post-tags .list';
+
+    /* [DONE] START LOOP: for every article: */
+
+    const articles = document.querySelectorAll(optArticleSelector);
+
+    for(let article of articles) {
+
+    console.log('Article: ', article, optArticleSelector);
+
+      /* [DONE] find tags wrapper */
+
+      const tagsWrapper = article.querySelector(optArticleTagsSelector);
+      console.log('Tags Wrapper: ', tagsWrapper);
+
+      /* [DONE] make html variable with empty string */
+
+      let html = '';
+
+      /* [IN PROGRESS] get tags from data-tags attribute */
+
+      const articleTags =
+
+      /* split tags into array */
+
+    /* START LOOP: for each tag */
+
+      /* generate HTML of the link */
+
+      /* add generated code to html variable */
+
+    /* END LOOP: for each tag */
+
+    /* insert HTML of all the links into the tags wrapper */
+
+    /* END LOOP: for every article: */
+    }
+  }
+
+generateTags();
