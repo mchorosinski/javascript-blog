@@ -53,8 +53,7 @@
     //optTitleListSelector = '.titles',
     //optArticleTagsSelector = '.post-tags .list';
 
-  // eslint-disable-next-line no-inner-declarations
-  function generateTitleLinks() {
+  const generateTitleLinks = function () {
 
   // Natomiast te stałe przeniosłem z góry w to miejsce - wewnątrz funkcji.
   const optArticleSelector = '.post',
@@ -108,11 +107,12 @@
     for (let link of links) {
       link.addEventListener('click', titleClickHandler);
     }
-  }
+  };
+
   generateTitleLinks();
 }
 
-  function generateTags(){
+  function generateTags() {
 
   // dlaczego muszę tutaj znowu ustalać te same stałe? Przecież wyżej zostały już podane (i też poza funkcją)...
 
@@ -135,20 +135,29 @@
       /* [DONE] make html variable with empty string */
 
       let html = '';
+      console.log('Wartość HTML', html);
 
-      /* [IN PROGRESS] get tags from data-tags attribute */
+      /* [DONE] get tags from data-tags attribute */
 
-      const articleTags =
+      const articleTags = article.getAttribute('data-tags');
+      console.log('Taken tags from the article: ', articleTags);
 
-      /* split tags into array */
+    /* [DONE] split tags into array */
 
-    /* START LOOP: for each tag */
+    const articleTagsArray = articleTags.split(' ');
+    console.log('Tags spiltted but in an array: ', articleTagsArray);
 
-      /* generate HTML of the link */
+    /* [DONE] START LOOP: for each tag */
+
+    for(let tag of articleTagsArray){
+    console.log('Tag separately: ', tag);
+
+      /* [IN PROGRESS] generate HTML of the link */
 
       /* add generated code to html variable */
 
     /* END LOOP: for each tag */
+    }
 
     /* insert HTML of all the links into the tags wrapper */
 
