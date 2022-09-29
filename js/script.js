@@ -4,13 +4,6 @@
 
   const titleClickHandler = function (event) {
 
-    /**
-     * ? Dlaczego powyżej zaczynam zapis stałej od wcięcia?
-     * ? Ponieważ chodzi właśnie o "const", a nie "function"?!
-     * ! Przy "function" wcięcie nie jest wymagane.
-     * ? Czy wymagana jest spacja przed klamerką?
-     */
-
     event.preventDefault();
     const clickedElement = this;
     console.log('Link was clicked!');
@@ -54,21 +47,8 @@
     console.log('Active article:', targetArticle);
   };
 
-  /**
-   * Poniższe stałe zapisane były we wcześniejszej wersji skryptu (właśnie poza "const generateTitleLinks = function () {" )
-   * i działały z funkcją generateTitleLink
-   *
-   * //const optArticleSelector = '.post'
-   *  //optTitleSelector = '.post-title',
-   *  //optTitleListSelector = '.titles',
-   *  //optArticleTagsSelector = '.post-tags .list';
-   */
+  const generateTitleLinks = function (customSelector = '') {
 
-  const generateTitleLinks = function () {
-
-    /**
-     * Zatem, poniższe stałe przeniosłem z góry w to miejsce -> wewnątrz funkcji.
-     */
     const optArticleSelector = '.post',
       optTitleSelector = '.post-title',
       optTitleListSelector = '.titles';
@@ -85,7 +65,8 @@
 
     /* [DONE] find all the articles and save them to variable: articles */
 
-    const articles = document.querySelectorAll(optArticleSelector);
+    const articles = document.querySelectorAll(optArticleSelector + customSelector);
+    console.log('Artykuły z "generateTitleLinks": ', articles);
 
     let html = '';
 
@@ -125,12 +106,6 @@
   generateTitleLinks();
 
   const generateTags = function () {
-
-    /**
-    * ? Dlaczego muszę tutaj znowu ustalać te same stałe?
-    * ? Przecież wyżej (ln. 59-62) zostały już podane (i też poza funkcją).
-    * ? Czy także tutaj wymagana jest spacja przed klamerką?
-    */
 
     const optArticleSelector = '.post',
       optArticleTagsSelector = '.post-tags .list';
@@ -252,16 +227,6 @@
 
     /* [DONE] execute function "generateTitleLinks" with article selector as argument */
 
-    function generateTitleLinks(customSelector = '') {
-
-      /**
-       * Ponownie poniższą stałą "const = optArticleSelector = '.post';" musiałem umieścić wewnątrz funkcji.
-       */
-
-      const optArticleSelector = '.post';
-      const articles = document.querySelectorAll(optArticleSelector + customSelector);
-      console.log('Argumenty łącznie: ', articles, optArticleSelector + customSelector);
-    }
     generateTitleLinks('[data-tags~="' + tag + '"]'); //! Łącznik ~= oznacza: "znajdź elementy, które mają atrybut data-tags, który ma w sobie słowo 'tag'".
   };
 
@@ -270,16 +235,15 @@
     /* [DONE] find all links to tags */
 
     const links = document.querySelectorAll('a[href^="#tag-"]'); //! link (a), <selektor>[atrybut (href) "(^=) zaczynający się od" "#tag-"]</selektor>.
-    console.log('Aktywne linki dla konkretnych tagów', links);
 
     /* [DONE] START LOOP: for each link */
 
     for(let link of links) {
+      console.log('Aktywny link dla konkretnych tagów', link);
 
       /* [DONE] add tagClickHandler as event listener for that link */
 
       link.addEventListener('click', tagClickHandler);
-      console.table({link});
 
       /* [DONE] END LOOP: for each link */
     }
