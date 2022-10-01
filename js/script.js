@@ -57,7 +57,7 @@
 
     const titleList = document.querySelector(optTitleListSelector);
 
-    function clearMessages() {
+    function clearMessages () {
       titleList.innerHTML = '';
     }
     console.log('titleList: ', titleList);
@@ -126,7 +126,7 @@
       /* [DONE] make html variable with empty string */
 
       let html = '';
-      console.log('Clean HTML', html);
+      console.log('Clean HTML done', html);
 
       /* [DONE] get tags from data-tags attribute */
 
@@ -249,4 +249,61 @@
     }
   };
   addClickListenersToTags();
+
+  const generateAuthors = function () {
+
+    const optArticleSelector = '.post',
+      optArticleAuthorSelector = '.post-author';
+
+    /* [DONE] START LOOP: for every article */
+
+    const articles = document.querySelectorAll(optArticleSelector);
+
+    for (let article of articles) {
+      console.log('Znaleziony artykuł: ', article);
+
+      /* find author's wrapper */
+
+      const authorsWrapper = article.querySelector(optArticleAuthorSelector);
+
+      /* [DONE] get authors' names from 'post-author' class */
+
+      const authorName = article.querySelector(optArticleAuthorSelector).value = article.querySelector(optArticleAuthorSelector).innerHTML; //! Uniknięcie -> [object HTMLParagraphElement]
+      console.log('Imię i nazwisko autora artykułu: ', authorName);
+
+      /* [DONE] set a new attribute (data-author) inside article */
+
+      article.setAttribute('data-author', authorName);
+      console.log('Do artykułu dodano nowy atrybut z imieniem i nazwiskiem autora');
+
+      /* [DONE] make html variable with an empty string */
+
+      let html = '';
+      console.log('Clean HTML done');
+
+      /* [DONE] remove author's name from the authors' wrapper (.post-author class) */
+
+      article.querySelector(optArticleAuthorSelector).innerHTML = '';
+      console.log('Usunięto imię i nazwisko autora z jego wrappera (.post-author class)');
+
+      /* [DONE] generate HTML of the link */
+
+      const linkHTML = '<a href=' + authorName + '>' + authorName + '</a>';
+      console.log('Wygenerowano link HTML z imieniem i nazwiskiem autora', linkHTML);
+
+      /* [DONE] add genrated code to html variable */
+
+      html = html + linkHTML;
+      console.log('Dodano wygenerowanego linka do kodu HTML', html);
+
+      /* [DONE] insert HTML of all the links into the authors' wrapper */
+
+      authorsWrapper.innerHTML = 'by ' + html +'';
+      console.log('Dodano kod html z linkiem ("by" imię i nazwisko autora)', html);
+
+      /* END LOOP: for every article */
+    }
+  };
+
+  generateAuthors();
 }
