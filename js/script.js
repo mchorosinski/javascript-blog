@@ -328,7 +328,7 @@
     /* [DONE] make a new constant "author" and extract author's name from "href" constant */
 
     const author = href.replace('by', '');
-    console.log('Odczytano imię i nazwisko autora ze stałem "href" (po wyeliminowaniu słowa "by") ', author);
+    console.log('Odczytano imię i nazwisko autora ze stałej "href" (po wyeliminowaniu słowa "by") ', author);
 
     /* [DONE] find all authors' links with class active */
 
