@@ -173,7 +173,7 @@
 
     event.preventDefault();
 
-    /* [DONE] make new constant named "clickedElement" and give it the value of "this" */
+    /* [DONE] make a new constant named "clickedElement" and give it the value of "this" */
 
     const clickedElement = this;
     console.log('Link was clicked!');
@@ -227,7 +227,7 @@
 
     /* [DONE] execute function "generateTitleLinks" with article selector as argument */
 
-    generateTitleLinks('[data-tags~="' + tag + '"]'); //! Łącznik ~= oznacza: "znajdź elementy, które mają atrybut data-tags, który ma w sobie słowo 'tag'".
+    generateTitleLinks('[data-tags~="' + tag + '"]'); //! Łącznik ~= oznacza: "znajdź elementy, które mają atrybut data-tags, który ma w sobie słowo 'tag' ".
   };
 
   const addClickListenersToTags = function () {
@@ -238,7 +238,7 @@
 
     /* [DONE] START LOOP: for each link */
 
-    for(let link of links) {
+    for (let link of links) {
       console.log('Aktywny link dla konkretnych tagów', link);
 
       /* [DONE] add tagClickHandler as event listener for that link */
@@ -248,6 +248,7 @@
       /* [DONE] END LOOP: for each link */
     }
   };
+
   addClickListenersToTags();
 
   const generateAuthors = function () {
@@ -269,6 +270,7 @@
       /* [DONE] get authors' names from 'post-author' class */
 
       const authorName = article.querySelector(optArticleAuthorSelector).value = article.querySelector(optArticleAuthorSelector).innerHTML; //! Uniknięcie -> [object HTMLParagraphElement]
+
       console.log('Imię i nazwisko autora artykułu: ', authorName);
 
       /* [DONE] set a new attribute (data-author) inside article */
@@ -306,4 +308,89 @@
   };
 
   generateAuthors();
+
+  const authorClickHandler = function (event) {
+
+    /* [DONE] prevent default action for this event */
+
+    event.preventDefault();
+
+    /* [DONE] make a new constant named "clickedElement and give it the value of "this" */
+
+    const clickedElement = this;
+    console.log('Link was clicked!');
+
+    /* [DONE] make a new constant "href" and read the attribute "href" of the clicked element */
+
+    const href = clickedElement.getAttribute('href');
+    console.log('Odczytano atrybut "href" klikniętego elementu: ', href);
+
+    /* [DONE] make a new constant "author" and extract author's name from "href" constant */
+
+    const author = href.replace('by', '');
+    console.log('Odczytano imię i nazwisko autora ze stałem "href" (po wyeliminowaniu słowa "by") ', author);
+
+    /* [DONE] find all authors' links with class active */
+
+    const activeAuthor = document.querySelectorAll('a.active[href^="by"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "by".
+    console.log('Aktywny link z autorem zaczynający się od słowa "by" ', activeAuthor);
+
+    /* [DONE] START LOOP: for each active author's link (to remove class active) */
+
+    for (let author of activeAuthor) {
+      console.log('"Active Link" loop activated - do usunięcia klasy "active"');
+
+      /* [DONE] remove class active */
+
+      author.classList.remove('active');
+      console.log('Usunięto klasę "active" do linka z autorem ', author );
+
+      /* [DONE] END LOOP: for each active author's link (to remove class active) */
+    }
+
+    /* [DONE] find all authors' links with "href" attribute equal to the "href" constant */
+
+    const authorLinks = document.querySelectorAll('a[href="' + href + '"]');
+    console.log('Wszystkie linki z atrybutem "href", który jest równy stałej "href" ', authorLinks);
+
+    /* [DONE] START LOOP: for each found author's link (to add class active) */
+
+    for (let authorLink of authorLinks) {
+      console.log('"Author Link" loop activated - do aktywowania klasy "active"');
+
+      /* [DONE] add class active */
+
+      authorLink.classList.add('active');
+      console.log('Dodano klasę "active" do linka z autorem ', authorLink);
+
+      /* [DONE] END LOOP: for each found author's link (to add class active) */
+    }
+
+    /* [DONE] execute function "generateTitleLinks" with article selector */
+
+    generateTitleLinks('[data-author="' + author + '"]');
+  };
+
+  const addClickListenerstoAuthors = function () {
+
+    /* [DONE] find all the links to authors */
+
+    const links = document.querySelectorAll('a[href~="by"]'); //! Łącznik ~= oznacza: "znajdź elementy, które mają atrybut "href", który ma w sobie słowo 'by' ".
+    console.log('Znalezione linki z autorami zawierające słowo "by": ', links);
+
+    /* [DONE] START LOOP: for each link */
+
+    for (let link of links) {
+      console.log('Aktywowano pętlę dla każdego linka');
+
+      /* [DONE] add authorClickHandler as even listener for that link */
+
+      link.addEventListener('click', authorClickHandler);
+
+      /* [DONE] END LOOP: for each link */
+    }
+  };
+
+  addClickListenerstoAuthors();
+
 }
