@@ -109,6 +109,11 @@
 
     const optArticleSelector = '.post',
       optArticleTagsSelector = '.post-tags .list';
+      //!optTagsListSelector = '.tags .list';
+
+    /* [DONE] create a new variable allTags with an empty array */
+
+    //!let allTags = [];
 
     /* [DONE] START LOOP: for every article: */
 
@@ -128,7 +133,7 @@
       let html = '';
       console.log('Clean HTML done', html);
 
-      /* [DONE] get tags from data-tags attribute */
+      /* [DONE] get tags from 'data-tags' attribute */
 
       const articleTags = article.getAttribute('data-tags');
       console.log('Taken tags from the article: ', articleTags);
@@ -151,7 +156,16 @@
         /* [DONE] add generated code to html variable */
 
         html = html + linkHTML;
-        console.log('Wyświetla zawartość zmiennej "html": ', html);
+        console.log('Wyświetla wygenerowany kod HTML', html);
+
+        /* [DONE] check if this link is NOT already in allTags */
+
+        //!if (allTags.indexOf(linkHTML) == -1) {
+
+        //!  /* [DONE] add generated code to allTags array */
+
+        //!  allTags.push(linkHTML);
+        //!}
 
         /* [DONE] END LOOP: for each tag */
       }
@@ -161,8 +175,16 @@
       tagsWrapper.innerHTML = html;
       console.log('Insert html code into tagsWrapper: ', html);
 
-      /* END LOOP: for every article: */
+      /* [DONE] END LOOP: for every article: */
     }
+
+    /* [DONE] find list of tags in right column */
+
+    //!const tagList = document.querySelector(optTagsListSelector);
+
+    /* [DONE] add html from allTags to tagList */
+
+    //!tagList.innerHTML = allTags.join(' ');
   };
 
   generateTags();
@@ -191,7 +213,7 @@
 
     /* [DONE] find all tag links with class active */
 
-    const activeTag = document.querySelectorAll('a.active[href^="#tag-"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#tag-".
+    const activeTag = document.querySelectorAll('a.active[href^="#tag-"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#tag-"
     console.log({activeTag});
 
     /* [DONE] START LOOP: for each active tag link */
@@ -199,7 +221,7 @@
     for (let tag of activeTag) {
       console.log('"Active tag" loop activated');
 
-      /* remove class active */
+      /* [DONE] remove class active */
 
       tag.classList.remove('active');
       console.log('Removed an active class from tag', tag);
@@ -261,47 +283,37 @@
     const articles = document.querySelectorAll(optArticleSelector);
 
     for (let article of articles) {
-      console.log('Znaleziony artykuł: ', article);
 
-      /* find author's wrapper */
+      /* [DONE] find author's wrapper */
 
       const authorsWrapper = article.querySelector(optArticleAuthorSelector);
-
-      /* [DONE] get authors' names from 'post-author' class */
-
-      const authorName = article.querySelector(optArticleAuthorSelector).value = article.querySelector(optArticleAuthorSelector).innerHTML; //! Uniknięcie -> [object HTMLParagraphElement]
-
-      console.log('Imię i nazwisko autora artykułu: ', authorName);
-
-      /* [DONE] set a new attribute (data-author) inside article */
-
-      article.setAttribute('data-author', authorName);
-      console.log('Do artykułu dodano nowy atrybut z imieniem i nazwiskiem autora');
+      console.log('Authors Wrapper: ', authorsWrapper);
 
       /* [DONE] make html variable with an empty string */
 
-      let html = '';
-      console.log('Clean HTML done');
+      //! Przyimek "by" -> przykładowy podpis pod tytułem artykułu: "by Kitty Toebean"
+      let html = 'by ';
+      console.log('almost Clean HTML: done');
 
-      /* [DONE] remove author's name from the authors' wrapper (.post-author class) */
+      /* [DONE] get authors' names from 'data-author' attribute */
 
-      article.querySelector(optArticleAuthorSelector).innerHTML = '';
-      console.log('Usunięto imię i nazwisko autora z jego wrappera (.post-author class)');
+      const authorName = article.getAttribute('data-author');
+      console.log('Pobrano imię i nazwisko autora: ', authorName);
 
       /* [DONE] generate HTML of the link */
 
-      const linkHTML = '<a href=' + authorName + '>' + authorName + '</a>';
+      const linkHTML = '<a href="#' + authorName + '">' + authorName + '</a>';
       console.log('Wygenerowano link HTML z imieniem i nazwiskiem autora', linkHTML);
 
       /* [DONE] add genrated code to html variable */
 
       html = html + linkHTML;
-      console.log('Dodano wygenerowanego linka do kodu HTML', html);
+      console.log('Wyświetla wygenerowany kod HTML', html);
 
       /* [DONE] insert HTML of all the links into the authors' wrapper */
 
-      authorsWrapper.innerHTML = 'by ' + html +'';
-      console.log('Dodano kod html z linkiem ("by" imię i nazwisko autora)', html);
+      authorsWrapper.innerHTML = html;
+      console.log('Dodano kod html z linkiem ', html);
 
       /* END LOOP: for every article */
     }
@@ -327,44 +339,52 @@
 
     /* [DONE] make a new constant "author" and extract author's name from "href" constant */
 
-    const author = href.replace('by', '');
-    console.log('Odczytano imię i nazwisko autora ze stałej "href" (po wyeliminowaniu słowa "by") ', author);
+    const author = href.replace('#', '');
+    console.log('Odczytano imię i nazwisko autora ze stałej href i elementu "href" ', author);
 
     /* [DONE] find all authors' links with class active */
 
-    const activeAuthor = document.querySelectorAll('a.active[href^="by"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "by".
-    console.log('Aktywny link z autorem zaczynający się od słowa "by" ', activeAuthor);
+    const activeAuthor = document.querySelectorAll('a.active[href^="#"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#"
+    console.log('Aktywny link z autorem zaczynający się od "#": ', activeAuthor);
 
-    /* [DONE] START LOOP: for each active author's link (to remove class active) */
-
-    for (let author of activeAuthor) {
-      console.log('"Active Link" loop activated - do usunięcia klasy "active"');
-
-      /* [DONE] remove class active */
-
-      author.classList.remove('active');
-      console.log('Usunięto klasę "active" do linka z autorem ', author );
-
-      /* [DONE] END LOOP: for each active author's link (to remove class active) */
-    }
+    /**
+     * NOT iN USE:
+     *
+     * //[DONE] START LOOP: for each active author's link (to remove class active)
+     *
+     * //for (let author of activeAuthor) {
+     *  //console.log('"Active Link" loop activated - do usunięcia klasy "active"');
+     *
+     *  //[DONE] remove class active
+     *
+     *  //author.classList.remove('active');
+     *  //console.log('Usunięto klasę "active" w linku z autorem ', author );
+     *
+     *  //[DONE] END LOOP: for each active author's link (to remove class active)
+     * //}
+     */
 
     /* [DONE] find all authors' links with "href" attribute equal to the "href" constant */
 
     const authorLinks = document.querySelectorAll('a[href="' + href + '"]');
     console.log('Wszystkie linki z atrybutem "href", który jest równy stałej "href" ', authorLinks);
 
-    /* [DONE] START LOOP: for each found author's link (to add class active) */
-
-    for (let authorLink of authorLinks) {
-      console.log('"Author Link" loop activated - do aktywowania klasy "active"');
-
-      /* [DONE] add class active */
-
-      authorLink.classList.add('active');
-      console.log('Dodano klasę "active" do linka z autorem ', authorLink);
-
-      /* [DONE] END LOOP: for each found author's link (to add class active) */
-    }
+    /**
+     * NOT iN USE:
+     *
+     * //[DONE] START LOOP: for each found author's link (to add class active)
+     *
+     * //for (let authorLink of authorLinks) {
+     *  //console.log('"Author Link" loop activated - do aktywowania klasy "active"');
+     *
+     *  //[DONE] add class active
+     *
+     *  //authorLink.classList.add('active');
+     *  //console.log('Dodano klasę "active" do linka z autorem ', authorLink);
+     *
+     *  //[DONE] END LOOP: for each found author's link (to add class active)
+     * //}
+     */
 
     /* [DONE] execute function "generateTitleLinks" with article selector */
 
@@ -375,8 +395,8 @@
 
     /* [DONE] find all the links to authors */
 
-    const links = document.querySelectorAll('a[href~="by"]'); //! Łącznik ~= oznacza: "znajdź elementy, które mają atrybut "href", który ma w sobie słowo 'by' ".
-    console.log('Znalezione linki z autorami zawierające słowo "by": ', links);
+    const links = document.querySelectorAll('a[href^="#"]'); //! Łącznik ^= oznacza: "znajdź elementy, które mają atrybut "href", który z kolei rozpoczyna się od '#' ".
+    console.log('Znalezione linki z autorami zawierające "#": ', links);
 
     /* [DONE] START LOOP: for each link */
 
