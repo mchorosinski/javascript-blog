@@ -111,9 +111,10 @@
       optArticleTagsSelector = '.post-tags .list';
       //!optTagsListSelector = '.tags .list';
 
-    /* [DONE] create a new variable allTags with an empty array */
+    /* [DONE] create a new variable allTags with an empty object */
 
-    //!let allTags = [];
+    //!let allTags = {};
+    console.log('Empty table created');
 
     /* [DONE] START LOOP: for every article: */
 
@@ -150,6 +151,7 @@
 
         /* [DONE] generate HTML of the link */
 
+        //! Generowane linki powinny mieć analaogiczną strukturę, tzn. wymagane w tym przypadku prefiksy np. "#tag-" i "#author-", a nie sam hash...
         const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li> ';
         console.log('Link HTML: ', linkHTML);
 
@@ -181,10 +183,12 @@
     /* [DONE] find list of tags in right column */
 
     //!const tagList = document.querySelector(optTagsListSelector);
+    //!console.log('Wyświetla zawartość tagList: ', tagList);
 
     /* [DONE] add html from allTags to tagList */
 
     //!tagList.innerHTML = allTags.join(' ');
+    //!console.log('Wyświetla zawartość allTags: ', allTags);
   };
 
   generateTags();
@@ -208,11 +212,13 @@
 
     /* [DONE] make a new constant "tag" and extract tag from the "href" constant */
 
+    //! Powinien występować "replace" z unikalnym argumentem (np. #tag-), a nie sam hash.
     const tag = href.replace('#tag-', '');
     console.log({tag});
 
     /* [DONE] find all tag links with class active */
 
+    //! Metoda wyszukiwania aktywnych tagów powinna być analogiczna do tej przy autorach, tj. wcześniej wygenrować linki z prefiksem np. "#author-" czy "#tag-", a nie sam hash...
     const activeTag = document.querySelectorAll('a.active[href^="#tag-"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#tag-"
     console.log({activeTag});
 
@@ -256,6 +262,7 @@
 
     /* [DONE] find all links to tags */
 
+    //! Metoda wyszukiwania linków powinna być analogiczna do tej przy autorach, tj. wcześniej wygenrować linki z prefiksem np. "#author-" czy "#tag-", a nie sam hash...
     const links = document.querySelectorAll('a[href^="#tag-"]'); //! link (a), <selektor>[atrybut (href) "(^=) zaczynający się od" "#tag-"]</selektor>.
 
     /* [DONE] START LOOP: for each link */
@@ -302,7 +309,8 @@
 
       /* [DONE] generate HTML of the link */
 
-      const linkHTML = '<a href="#' + authorName + '">' + authorName + '</a>';
+      //! Generowane linki powinny mieć analaogiczną strukturę, tzn. wymagane w tym przypadku prefiksy np. "#author-" i "#tag-", a nie sam hash...
+      const linkHTML = '<a href="#author-' + authorName + '">' + authorName + '</a>';
       console.log('Wygenerowano link HTML z imieniem i nazwiskiem autora', linkHTML);
 
       /* [DONE] add genrated code to html variable */
@@ -339,13 +347,15 @@
 
     /* [DONE] make a new constant "author" and extract author's name from "href" constant */
 
-    const author = href.replace('#', '');
+    //! Powinien występować "replace" z unikalnym argumentem (np. #author-), a nie sam hash.
+    const author = href.replace('#author-', '');
     console.log('Odczytano imię i nazwisko autora ze stałej href i elementu "href" ', author);
 
     /* [DONE] find all authors' links with class active */
 
-    const activeAuthor = document.querySelectorAll('a.active[href^="#"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#"
-    console.log('Aktywny link z autorem zaczynający się od "#": ', activeAuthor);
+    //! Metoda wyszukiwania aktywnych autorów powinna być analogiczna do tej przy tagach, tj. wcześniej wygenrować linki z prefiksem np. "#tag-" czy "#author-", a nie sam hash...
+    const activeAuthor = document.querySelectorAll('a.active[href^="#author-"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#author-"
+    console.log('Aktywny link z autorem zaczynający się od "#author-": ', activeAuthor);
 
     /**
      * NOT iN USE:
@@ -395,8 +405,9 @@
 
     /* [DONE] find all the links to authors */
 
-    const links = document.querySelectorAll('a[href^="#"]'); //! Łącznik ^= oznacza: "znajdź elementy, które mają atrybut "href", który z kolei rozpoczyna się od '#' ".
-    console.log('Znalezione linki z autorami zawierające "#": ', links);
+    //! Metoda wyszukiwania linków powinna być analogiczna do tej przy tagach, tj. wcześniej wygenrować linki z prefiksem np. "#tag-" czy "#author-", a nie sam hash...
+    const links = document.querySelectorAll('a[href^="#author-"]'); //! Łącznik ^= oznacza: "znajdź elementy, które mają atrybut "href", który z kolei rozpoczyna się od '#author-' ".
+    console.log('Znalezione linki z autorami zawierające "#author-": ', links);
 
     /* [DONE] START LOOP: for each link */
 
