@@ -2,12 +2,16 @@
 
   'use strict';
 
+  /**
+   *  ! START: TITLE CLICK HANDLER FUNCTION !
+   */
+
   const titleClickHandler = function (event) {
 
     event.preventDefault();
     const clickedElement = this;
-    console.log('Link was clicked!');
-    console.log('Argument "event" funkcji (in. handler) "titleClickHandler": ', event);
+    //console.log('Link was clicked!');
+    //console.log('Argument "event" funkcji (in. handler) "titleClickHandler": ', event);
 
     /* [DONE] remove class 'active' from all article links  */
 
@@ -20,12 +24,13 @@
     /* [DONE] add class 'active' to the clicked link */
 
     clickedElement.classList.add('active');
-    console.log('clickedElement:', clickedElement);
-    console.log('clickedElement (with plus): ' + clickedElement);
+    //console.log('clickedElement:', clickedElement);
+    //console.log('clickedElement (with plus): ' + clickedElement);
 
     /* [DONE] remove class 'active' from all articles */
 
-    const activeArticles = document.querySelectorAll('.post.active'); //! Gdy w zapisie argumentu nie ma spacji (a występuje np. kropka), wtedy jest to spójnik.
+    //! Gdy w zapisie argumentu nie ma spacji (a występuje np. kropka), wtedy jest to spójnik.
+    const activeArticles = document.querySelectorAll('.post.active');
 
     for (let activeArticle of activeArticles) {
       activeArticle.classList.remove('active');
@@ -34,18 +39,27 @@
     /* [DONE] get 'href' attribute from the clicked link */
 
     const articleSelector = clickedElement.getAttribute('href');
-    console.log('articleSelector:', articleSelector);
+    //console.log('articleSelector:', articleSelector);
 
     /* [DONE] find the correct article using the selector (value of 'href' attribute) */
 
     const targetArticle = document.querySelector(articleSelector);
-    console.log('targetArticle:', targetArticle);
+    //console.log('targetArticle:', targetArticle);
 
     /* [DONE] add class 'active' to the correct article */
 
     targetArticle.classList.add('active');
-    console.log('Active article:', targetArticle);
+    //console.log('Active article:', targetArticle);
   };
+
+  /**
+   *  ! END: TITLE CLICK HANDLER FUNCTION !
+   */
+
+
+  /**
+   *  ! START: GENERATE TITLE LINKS FUNCTION !
+   */
 
   const generateTitleLinks = function (customSelector = '') {
 
@@ -60,13 +74,13 @@
     function clearMessages () {
       titleList.innerHTML = '';
     }
-    console.log('titleList: ', titleList);
+    //console.log('titleList: ', titleList);
     clearMessages();
 
     /* [DONE] find all the articles and save them to variable: articles */
 
     const articles = document.querySelectorAll(optArticleSelector + customSelector);
-    console.log('Artykuły z "generateTitleLinks": ', articles);
+    //console.log('Artykuły z "generateTitleLinks": ', articles);
 
     let html = '';
 
@@ -75,28 +89,28 @@
       /* [DONE] get the article id */
 
       const articleId = article.getAttribute('id');
-      console.log('ArticleID: ', articleId);
+      //console.log('ArticleID: ', articleId);
 
       /* [DONE] find the title element */
 
       const articleTitle = article.querySelector(optTitleSelector).innerHTML;
-      console.log('Article Title: ', articleTitle);
+      //console.log('Article Title: ', articleTitle);
 
       /* [DONE] create HTML of the link */
 
       const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
-      console.log('Link HTML: ', linkHTML);
+      //console.log('Link HTML: ', linkHTML);
 
       /* [DONE] insert link into titleList */
 
       html = html + linkHTML;
     }
-    console.log('Wyświetla zawartość zmiennej "html": ', html);
+    //console.log('Wyświetla zawartość zmiennej "html": ', html);
 
     titleList.innerHTML = html;
 
     const links = document.querySelectorAll('.titles a');
-    console.log('Co zawiera stała "links": ', links);
+    //console.log('Co zawiera stała "links": ', links);
 
     for (let link of links) {
       link.addEventListener('click', titleClickHandler);
@@ -105,16 +119,113 @@
 
   generateTitleLinks();
 
+  /**
+   * ! END: GENERATE TITLE LINKS FUNCTION !
+   */
+
+
+  /**
+   *  ! START:  CALCULATE TAGS PARAMS FUNCTION !
+   */
+
+  // Celem tej funkcji jest znalezienie skrajnych liczb (wystąpień tagów).
+  // - by następnie stworzyć chmurę tagów.
+  const calculateTagsParams = function (tags) {
+
+    const params = {
+      max: 0,
+      min: 999999
+    };
+    //console.log('Największa i najmnniejsza liczba wystąpień tagów:', params);
+
+    // Pętla będzie iterować przez cały obiekt, przekazany do funkcji jako argument "tags".
+    for (let tag in tags) {
+      console.log(tag + ' is used ' + tags[tag] + ' times');
+
+      // Wewnątrz tej pętli ustawiono wartości dla params.max – będzie to tags[tag],
+      // ale tylko jeśli ta liczba jest większa niż dotychczasowa wartość params.max, czyli 0.
+      if(tags[tag] > params.max){
+        params.max = tags[tag];
+      }
+      // Wewnątrz tej pętli ustawiono wartości dla params.min – będzie to tags[tag],
+      // ale tylko jeśli ta liczba jest mniejsza niż dotychczasowa wartość params.min, czyli 999999.
+      if(tags[tag] < params.min){
+        params.min = tags[tag];
+      }
+    }
+
+    return params;
+  };
+
+
+  /**
+   *  ! END: CALCULATE TAGS PARAMS FUNCTION !
+   */
+
+
+  /**
+   *  ! START: CALCULATE TAG CLASS FUNCTION !
+   * @param {*} count
+   * @param {*} params
+   */
+
+
+  const calculateTagClass = function (count, params) {
+
+    const optCloudClassCount = '5',
+      optCloudClassPrefix = 'tag-size-';
+
+    const normalizedCount = count - params.min;
+    const normalizedMax = params.max - params.min;
+    const percentage = normalizedCount / normalizedMax;
+    const classNumber = Math.floor( percentage * (optCloudClassCount - 1) + 1 );
+
+    //! Inny sposób (z przykładowymi wartościami) na powyższe obliczenie:
+
+    /*
+    classNumber = Math.floor( 0.5 * 5 + 1 );
+
+    classNumber = Math.floor( 0.5 * optCloudClassCount + 1 );
+
+    classNumber = Math.floor( ( 4 / 8 ) * optCloudClassCount + 1 );
+
+    classNumber = Math.floor( ( (6 - 2) / (10 - 2) ) * optCloudClassCount + 1 );
+
+    classNumber = Math.floor( ( (count - 2) / (10 - 2) ) * optCloudClassCount + 1 );
+
+    classNumber = Math.floor( ( (count - 2) / (params.max - 2) ) * optCloudClassCount + 1 );
+
+    classNumber = Math.floor( ( (count - params.min) / (params.max - 2) ) * optCloudClassCount + 1 );
+
+    classNumber = Math.floor( ( (count - params.min) / (params.max - params.min) ) * optCloudClassCount + 1 );
+    */
+
+    return optCloudClassPrefix + classNumber;
+
+  };
+
+
+  /**
+   *  ! END: CALCULATE TAG CLASS FUNCTION !
+   */
+
+
+  /**
+   *  ! START: GENERATE TAGS FUNCTION !
+   */
+
+
   const generateTags = function () {
 
     const optArticleSelector = '.post',
-      optArticleTagsSelector = '.post-tags .list';
-      //!optTagsListSelector = '.tags .list';
+      optArticleTagsSelector = '.post-tags .list',
+      optTagsListSelector = '.tags.list';
 
     /* [DONE] create a new variable allTags with an empty object */
 
-    //!let allTags = {};
-    console.log('Empty table created');
+    //! Nawiasy "{}" oznaczają obiekt, zaś "[]" tablicę.
+    let allTags = {};
+    //console.log('Empty table created');
 
     /* [DONE] START LOOP: for every article: */
 
@@ -122,52 +233,57 @@
 
     for (let article of articles) {
 
-      console.log('Article: ', article, optArticleSelector);
+      //console.log('Article: ', article, optArticleSelector);
 
       /* [DONE] find tags wrapper */
 
       const tagsWrapper = article.querySelector(optArticleTagsSelector);
-      console.log('Tags Wrapper: ', tagsWrapper);
+      //console.log('Tags Wrapper: ', tagsWrapper);
 
       /* [DONE] make html variable with empty string */
 
       let html = '';
-      console.log('Clean HTML done', html);
+      //console.log('Clean HTML done', html);
 
       /* [DONE] get tags from 'data-tags' attribute */
 
       const articleTags = article.getAttribute('data-tags');
-      console.log('Taken tags from the article: ', articleTags);
+      //console.log('Taken tags from the article: ', articleTags);
 
       /* [DONE] split tags into array */
 
       const articleTagsArray = articleTags.split(' ');
-      console.log('Tags spiltted but in an array: ', articleTagsArray);
+      //console.log('Tags spiltted but in an array: ', articleTagsArray);
 
       /* [DONE] START LOOP: for each tag */
 
       for (let tag of articleTagsArray) {
-        console.log('Tag separately: ', tag);
+        //console.log('Tag separately: ', tag);
 
         /* [DONE] generate HTML of the link */
 
         //! Generowane linki powinny mieć analaogiczną strukturę, tzn. wymagane w tym przypadku prefiksy np. "#tag-" i "#author-", a nie sam hash...
         const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li> ';
-        console.log('Link HTML: ', linkHTML);
+        //console.log('Link HTML: ', linkHTML);
 
         /* [DONE] add generated code to html variable */
 
         html = html + linkHTML;
-        console.log('Wyświetla wygenerowany kod HTML', html);
+        //console.log('Wyświetla wygenerowany kod HTML', html);
 
         /* [DONE] check if this link is NOT already in allTags */
 
-        //!if (allTags.indexOf(linkHTML) == -1) {
+        //! Warunek (!) czytamy jako "jeśli allTags NIE MA klucza tag".
+        if (!allTags[tag]) {
 
-        //!  /* [DONE] add generated code to allTags array */
+          /* [DONE] add generated code to allTags object */
 
-        //!  allTags.push(linkHTML);
-        //!}
+          //! W obiekcie allTags nie mamy jeszcze danego tagu. Wtedy licznik wystąpień tego tagu ustawiamy na 1.
+          allTags[tag] = 1;
+        } else {
+          //! Operator inkrementacji – znaki ++ zwiększają liczbę o 1.
+          allTags[tag]++;
+        }
 
         /* [DONE] END LOOP: for each tag */
       }
@@ -175,23 +291,65 @@
       /* [DONE] insert HTML of all the links into the tags wrapper */
 
       tagsWrapper.innerHTML = html;
-      console.log('Insert html code into tagsWrapper: ', html);
+      //console.log('Insert html code into tagsWrapper: ', html);
 
       /* [DONE] END LOOP: for every article: */
     }
 
     /* [DONE] find list of tags in right column */
 
-    //!const tagList = document.querySelector(optTagsListSelector);
-    //!console.log('Wyświetla zawartość tagList: ', tagList);
+    // Gdy w HTML występuje zapis "list tags" w jednej linii -> const: .tags.list <- no space
+    //! Bład 'Uncaught TypeError: Cannot set properties of null (setting 'innerHTML') może świadczyć o wybraniu złego selektora w kodzie HTML - tagList przyjmuje wartość NULL.
+    const tagList = document.querySelector(optTagsListSelector);
+    //console.table('Wyświetla zawartość tagList: ', tagList);
 
-    /* [DONE] add html from allTags to tagList */
+    const tagsParams = calculateTagsParams(allTags);
+    //console.log('tagsParams:', tagsParams);
 
-    //!tagList.innerHTML = allTags.join(' ');
-    //!console.log('Wyświetla zawartość allTags: ', allTags);
+    /* [DONE] create variable for all links HTML code */
+
+    let allTagsHTML = '';
+
+    /* [DONE] START LOOP: for each tag in allTags: */
+
+    for (let tag in allTags) {
+
+      /* [DONE] generate code of a link and add it to allTagsHTML */
+
+      //! Używamy tutaj operatora += do doklejania kolejnego linka do zmiennej allTagsHTML.
+      //! W linku powinna znajdować się też liczba (w nawiasie) wystąpień danego tagu, czyli: allTags[tag]
+      //allTagsHTML += '<li><a href="#tag-' + tag + '">' + tag + ' (' + allTags[tag] + ')</a></li> ';
+      //console.table('All TAGS HTML: ', allTagsHTML);
+
+      //! Kod HTML z policzoną wartością występowania tagów.
+      //const tagLinkHTML = '<li><a class="' + calculateTagClass(allTags[tag], tagsParams) + '" href="#tag-'+ tag +'">' + tag + ' (' + allTags[tag] + ')</a></li>';
+
+      //! Kod HTML bez policzonej wartości występowania tagów.
+      const tagLinkHTML = '<li><a class="' + calculateTagClass(allTags[tag], tagsParams) + '" href="#tag-'+ tag +'">' + tag + '</a></li>';
+      console.log('tagLinkHTML:', tagLinkHTML);
+
+      allTagsHTML += tagLinkHTML;
+
+      /* [DONE] END LOOP: for each tag in allTags: */
+
+    }
+
+    /*[DONE] add HTML from allTagsHTML to tagList */
+
+    tagList.innerHTML = allTagsHTML;
+
   };
 
   generateTags();
+
+  /**
+   *  ! END: GENERATE TAGS FUNCTION !
+   */
+
+
+  /**
+   *  ! START: TAG CLICK HANDLER FUNCTION !
+   */
 
   const tagClickHandler = function (event) {
 
@@ -202,25 +360,25 @@
     /* [DONE] make a new constant named "clickedElement" and give it the value of "this" */
 
     const clickedElement = this;
-    console.log('Link was clicked!');
-    console.log('Argument funkcji "tagClickHandler": done');
+    //console.log('Link was clicked!');
+    //console.log('Argument funkcji "tagClickHandler": done');
 
     /* [DONE] make a new constant "href" and read the attribute "href" of the clicked element */
 
     const href = clickedElement.getAttribute('href');
-    console.log({href});
+    //console.log({href});
 
     /* [DONE] make a new constant "tag" and extract tag from the "href" constant */
 
     //! Powinien występować "replace" z unikalnym argumentem (np. #tag-), a nie sam hash.
     const tag = href.replace('#tag-', '');
-    console.log({tag});
+    //console.log({tag});
 
     /* [DONE] find all tag links with class active */
 
     //! Metoda wyszukiwania aktywnych tagów powinna być analogiczna do tej przy autorach, tj. wcześniej wygenrować linki z prefiksem np. "#author-" czy "#tag-", a nie sam hash...
     const activeTag = document.querySelectorAll('a.active[href^="#tag-"]'); //! Łącznik ^= oznacza: "atrybut href zaczynający się od "#tag-"
-    console.log({activeTag});
+    //console.log({activeTag});
 
     /* [DONE] START LOOP: for each active tag link */
 
@@ -230,7 +388,7 @@
       /* [DONE] remove class active */
 
       tag.classList.remove('active');
-      console.log('Removed an active class from tag', tag);
+      //console.log('Removed an active class from tag', tag);
 
       /* [DONE] END LOOP: for each active tag link */
     }
@@ -238,7 +396,7 @@
     /* [DONE] find all tag links with "href" attribute equal to the "href" constant */
 
     const tagLinks = document.querySelectorAll('a[href="' + href + '"]');
-    console.log({tagLinks});
+    //console.log({tagLinks});
 
     /* [DONE] START LOOP: for each found tag link */
 
@@ -248,7 +406,7 @@
       /* [DONE] add class active */
 
       tagLink.classList.add('active');
-      console.log('Added an active class to tagLink', tagLink);
+      //console.log('Added an active class to tagLink', tagLink);
 
       /* [DONE] END LOOP: for each found tag link */
     }
@@ -257,6 +415,15 @@
 
     generateTitleLinks('[data-tags~="' + tag + '"]'); //! Łącznik ~= oznacza: "znajdź elementy, które mają atrybut data-tags, który ma w sobie słowo 'tag' ".
   };
+
+  /**
+   *  ! END: TAG CLICK HANDLER FUNCTION !
+   */
+
+
+  /**
+   *  ! START: ADD CLICK LISTENERS TO TAGS FUNCTION !
+   */
 
   const addClickListenersToTags = function () {
 
@@ -268,7 +435,7 @@
     /* [DONE] START LOOP: for each link */
 
     for (let link of links) {
-      console.log('Aktywny link dla konkretnych tagów', link);
+      //console.log('Aktywny link dla konkretnych tagów', link);
 
       /* [DONE] add tagClickHandler as event listener for that link */
 
@@ -280,10 +447,62 @@
 
   addClickListenersToTags();
 
+  /**
+   *  ! END: ADD CLICK LISTENERS TO FUNCTION !
+   */
+
+
+  /**
+   *  ! START: CALCULATE AUTHORS PARAMS FUNCTION !
+   */
+
+  // Celem tej funkcji jest znalezienie skrajnych liczb (wystąpień autorów).
+
+  const calculateAuthorsParams = function (authors) {
+
+    const params = {
+      max: 0,
+      min: 999999
+    };
+    console.log('Największa i najmnniejsza liczba wystąpień autorów:', params);
+
+    // Pętla będzie iterować przez cały obiekt, przekazany do funkcji jako argument "authors".
+    for (let author in authors) {
+      console.log(author + ' is used ' + authors[author] + ' times');
+
+      // Wewnątrz tej pętli ustawiono wartości dla params.max – będzie to authors[author],
+      // ale tylko jeśli ta liczba jest większa niż dotychczasowa wartość params.max, czyli 0.
+      if(authors[author] > params.max){
+        params.max = authors[author];
+      }
+      // Wewnątrz tej pętli ustawiono wartości dla params.min – będzie to authors[author],
+      // ale tylko jeśli ta liczba jest mniejsza niż dotychczasowa wartość params.min, czyli 999999.
+      if(authors[author] < params.min){
+        params.min = authors[author];
+      }
+    }
+
+    return params;
+  };
+
+  /**
+   *  ! END: CALCULATE AUTHORS PARAMS FUNCTION !
+   */
+
+  /**
+   *  ! START: GENERATE AUTHORS FUNCTION !
+   */
+
   const generateAuthors = function () {
 
     const optArticleSelector = '.post',
-      optArticleAuthorSelector = '.post-author';
+      optArticleAuthorSelector = '.post-author',
+      optAuthorsListSelector = '.authors.list';
+
+    /* [DONE] create a new variable allTags with an empty object */
+
+    let allAuthors = {};
+    //console.log('Empty table created');
 
     /* [DONE] START LOOP: for every article */
 
@@ -294,40 +513,107 @@
       /* [DONE] find author's wrapper */
 
       const authorsWrapper = article.querySelector(optArticleAuthorSelector);
-      console.log('Authors Wrapper: ', authorsWrapper);
+      //console.log('Authors Wrapper: ', authorsWrapper);
 
       /* [DONE] make html variable with an empty string */
 
+      //todo: przenieść przyimek do linku HTML
       //! Przyimek "by" -> przykładowy podpis pod tytułem artykułu: "by Kitty Toebean"
       let html = 'by ';
-      console.log('almost Clean HTML: done');
+      //console.log('almost Clean HTML: done');
 
       /* [DONE] get authors' names from 'data-author' attribute */
 
       const authorName = article.getAttribute('data-author');
-      console.log('Pobrano imię i nazwisko autora: ', authorName);
+      //console.log('Pobrano imię i nazwisko autora: ', authorName);
 
       /* [DONE] generate HTML of the link */
 
       //! Generowane linki powinny mieć analaogiczną strukturę, tzn. wymagane w tym przypadku prefiksy np. "#author-" i "#tag-", a nie sam hash...
       const linkHTML = '<a href="#author-' + authorName + '">' + authorName + '</a>';
-      console.log('Wygenerowano link HTML z imieniem i nazwiskiem autora', linkHTML);
+      //console.log('Wygenerowano link HTML z imieniem i nazwiskiem autora', linkHTML);
 
       /* [DONE] add genrated code to html variable */
 
       html = html + linkHTML;
-      console.log('Wyświetla wygenerowany kod HTML', html);
+      //console.log('Wyświetla wygenerowany kod HTML', html);
+
+      /* [DONE] check if this link is NOT already in allAuthors */
+
+      //! Pojedyncze imię i nazwisko autora znajduje się w atrybucie 'data-author' (const authorName).
+      //! Warunek (!) czytamy jako "jeśli allAuthors NIE MA klucza authorName".
+      if (!allAuthors[authorName]) {
+
+        /* [DONE] add generated code to allAuthors object */
+
+        //! W obiekcie allAuthors nie mamy jeszcze danego autora. Wtedy licznik wystąpień tego autora ustawiamy na 1.
+        allAuthors[authorName] = 1;
+      } else {
+        //! Operator inkrementacji – znaki ++ zwiększają liczbę o 1.
+        allAuthors[authorName]++;
+      }
 
       /* [DONE] insert HTML of all the links into the authors' wrapper */
 
       authorsWrapper.innerHTML = html;
-      console.log('Dodano kod html z linkiem ', html);
+      //console.log('Dodano kod html z linkiem ', html);
 
       /* END LOOP: for every article */
     }
+
+    /* [DONE] find list of authors in right column */
+
+    // Gdy w HTML występuje zapis "list authors" w linii -> const: .authors.list <- no space
+    //! Bład 'Uncaught TypeError: Cannot set properties of null (setting 'innerHTML') może świadczyć o wybraniu złego selektora w kodzie HTML - AuthorsList przyjmuje wartość NULL.
+    const authorsList = document.querySelector(optAuthorsListSelector);
+    //console.table('Wyświetla zawartość authorsList: ', authorsList);
+
+    const authorsParams = calculateAuthorsParams(allAuthors);
+    console.log('tagsParams:', authorsParams);
+
+    /* [DONE] create variable for all links HTML code */
+
+    let allAuthorsHTML = '';
+
+    /* [DONE] START LOOP: for each author in allAuthors: */
+
+    for (let author in allAuthors) {
+
+      /* [DONE] generate code of a link and add it to allAuthorsHTML */
+
+      //! Używamy tutaj operatora += do doklejania kolejnego linka do zmiennej allAuthorsHTML.
+      //! W linku powinna znajdować się też liczba (w nawiasie) wystąpień danego autora, czyli: allAuthors[author]
+
+      //allAuthorsHTML += '<li><a href="#author-' + author + '">' + author + ' (' + allAuthors[author] + ')</a></li> ';
+      //console.table('All AUTHORS HTML: ', allAuthorsHTML);
+
+      //! Kod HTML z policzoną wartością występowania autorów.
+      const authorLinkHTML = '<li><a href="#author-'+ author +'">' + author + '</a> (' + allAuthors[author] + ')</li>';
+
+      //! Kod HTML bez policzonej wartości występowania autorów oraz miejscem na klasę.
+      //const authorLinkHTML = '<li><a class="' + calculateAuthorClass(allAuthors[author], authorsParams) + '" href="#authors-'+ author +'">' + author + '</a></li>';
+      console.log('authorLinkHTML:', authorLinkHTML);
+
+      allAuthorsHTML += authorLinkHTML;
+
+      /* [DONE] END LOOP: for each author in allAuthors: */
+
+    }
+
+    authorsList.innerHTML = allAuthorsHTML;
+
   };
 
   generateAuthors();
+
+  /**
+   *  ! END: GENERATE AUTHORS FUNCTION !
+   */
+
+
+  /**
+   *  ! START: AUTHOR CLICK HANDLER FUNCTION !
+   */
 
   const authorClickHandler = function (event) {
 
@@ -338,18 +624,18 @@
     /* [DONE] make a new constant named "clickedElement and give it the value of "this" */
 
     const clickedElement = this;
-    console.log('Link was clicked!');
+    //console.log('Link was clicked!');
 
     /* [DONE] make a new constant "href" and read the attribute "href" of the clicked element */
 
     const href = clickedElement.getAttribute('href');
-    console.log('Odczytano atrybut "href" klikniętego elementu: ', href);
+    //console.log('Odczytano atrybut "href" klikniętego elementu: ', href);
 
     /* [DONE] make a new constant "author" and extract author's name from "href" constant */
 
     //! Powinien występować "replace" z unikalnym argumentem (np. #author-), a nie sam hash.
     const author = href.replace('#author-', '');
-    console.log('Odczytano imię i nazwisko autora ze stałej href i elementu "href" ', author);
+    //console.log('Odczytano imię i nazwisko autora ze stałej href i elementu "href" ', author);
 
     /* [DONE] find all authors' links with class active */
 
@@ -401,18 +687,27 @@
     generateTitleLinks('[data-author="' + author + '"]');
   };
 
+  /**
+   *  ! END: AUTHOR CLICK HANDLER FUNCTION !
+   */
+
+
+  /**
+   *  ! START: ADD CLICK LISTENERS TO AUTHORS FUNCTION !
+   */
+
   const addClickListenerstoAuthors = function () {
 
     /* [DONE] find all the links to authors */
 
     //! Metoda wyszukiwania linków powinna być analogiczna do tej przy tagach, tj. wcześniej wygenrować linki z prefiksem np. "#tag-" czy "#author-", a nie sam hash...
     const links = document.querySelectorAll('a[href^="#author-"]'); //! Łącznik ^= oznacza: "znajdź elementy, które mają atrybut "href", który z kolei rozpoczyna się od '#author-' ".
-    console.log('Znalezione linki z autorami zawierające "#author-": ', links);
+    //console.log('Znalezione linki z autorami zawierające "#author-": ', links);
 
     /* [DONE] START LOOP: for each link */
 
     for (let link of links) {
-      console.log('Aktywowano pętlę dla każdego linka');
+      //console.log('Aktywowano pętlę dla każdego linka');
 
       /* [DONE] add authorClickHandler as even listener for that link */
 
@@ -423,5 +718,9 @@
   };
 
   addClickListenerstoAuthors();
+
+  /**
+   *  ! END: ADD CLICK LISTENERS TO AUTHORS FUNCTION !
+   */
 
 }
