@@ -3,6 +3,37 @@
   'use strict';
 
   /**
+   *  ! OPTIONS & SELECTORS:
+   */
+
+  const opts = {
+    tagSizes: {
+      count: '5',
+      classPrefix: 'tag-size-',
+    },
+  };
+
+  const select = {
+    all: {
+      article: '.post',
+      linksTo: {
+        tags: 'a[href^="#tag-"]',
+        authors: 'a[href^="#author-"]',
+      },
+    },
+    article: {
+      tags: '.post-tags .list',
+      authors: '.post-author',
+      titles: '.post-title',
+    },
+    listOf: {
+      titles: '.titles',
+      tags: '.tags.list',
+      authors: '.authors.list',
+    },
+  };
+
+  /**
    *  ! START: TITLE CLICK HANDLER FUNCTION !
    */
 
@@ -39,11 +70,11 @@
     /* [DONE] get 'href' attribute from the clicked link */
 
     const articleSelector = clickedElement.getAttribute('href');
-    //console.log('articleSelector:', articleSelector);
+    console.log('Article Selector:', articleSelector);
 
     /* [DONE] find the correct article using the selector (value of 'href' attribute) */
 
-    const targetArticle = document.querySelector(articleSelector);
+    const targetArticle = document.querySelector(select.all.article);
     //console.log('targetArticle:', targetArticle);
 
     /* [DONE] add class 'active' to the correct article */
@@ -56,20 +87,15 @@
    *  ! END: TITLE CLICK HANDLER FUNCTION !
    */
 
-
   /**
    *  ! START: GENERATE TITLE LINKS FUNCTION !
    */
 
   const generateTitleLinks = function (customSelector = '') {
 
-    const optArticleSelector = '.post',
-      optTitleSelector = '.post-title',
-      optTitleListSelector = '.titles';
-
     /* [DONE] remove contents of titleList */
 
-    const titleList = document.querySelector(optTitleListSelector);
+    const titleList = document.querySelector(select.listOf.titles);
 
     function clearMessages () {
       titleList.innerHTML = '';
@@ -79,7 +105,7 @@
 
     /* [DONE] find all the articles and save them to variable: articles */
 
-    const articles = document.querySelectorAll(optArticleSelector + customSelector);
+    const articles = document.querySelectorAll(select.all.article + customSelector);
     //console.log('Artykuły z "generateTitleLinks": ', articles);
 
     let html = '';
@@ -93,7 +119,7 @@
 
       /* [DONE] find the title element */
 
-      const articleTitle = article.querySelector(optTitleSelector).innerHTML;
+      const articleTitle = article.querySelector(select.article.titles).innerHTML;
       //console.log('Article Title: ', articleTitle);
 
       /* [DONE] create HTML of the link */
@@ -122,7 +148,6 @@
   /**
    * ! END: GENERATE TITLE LINKS FUNCTION !
    */
-
 
   /**
    *  ! START:  CALCULATE TAGS PARAMS FUNCTION !
@@ -157,11 +182,9 @@
     return params;
   };
 
-
   /**
    *  ! END: CALCULATE TAGS PARAMS FUNCTION !
    */
-
 
   /**
    *  ! START: CALCULATE TAG CLASS FUNCTION !
@@ -169,57 +192,46 @@
    * @param {*} params
    */
 
-
   const calculateTagClass = function (count, params) {
-
-    const optCloudClassCount = '5',
-      optCloudClassPrefix = 'tag-size-';
 
     const normalizedCount = count - params.min;
     const normalizedMax = params.max - params.min;
     const percentage = normalizedCount / normalizedMax;
-    const classNumber = Math.floor( percentage * (optCloudClassCount - 1) + 1 );
+    const classNumber = Math.floor( percentage * (opts.tagSizes.count - 1) + 1 );
 
     //! Inny sposób (z przykładowymi wartościami) na powyższe obliczenie:
 
     /*
     classNumber = Math.floor( 0.5 * 5 + 1 );
 
-    classNumber = Math.floor( 0.5 * optCloudClassCount + 1 );
+    classNumber = Math.floor( 0.5 * opts.tagSizes.count + 1 );
 
-    classNumber = Math.floor( ( 4 / 8 ) * optCloudClassCount + 1 );
+    classNumber = Math.floor( ( 4 / 8 ) * opts.tagSizes.count + 1 );
 
-    classNumber = Math.floor( ( (6 - 2) / (10 - 2) ) * optCloudClassCount + 1 );
+    classNumber = Math.floor( ( (6 - 2) / (10 - 2) ) * opts.tagSizes.count + 1 );
 
-    classNumber = Math.floor( ( (count - 2) / (10 - 2) ) * optCloudClassCount + 1 );
+    classNumber = Math.floor( ( (count - 2) / (10 - 2) ) * opts.tagSizes.count + 1 );
 
-    classNumber = Math.floor( ( (count - 2) / (params.max - 2) ) * optCloudClassCount + 1 );
+    classNumber = Math.floor( ( (count - 2) / (params.max - 2) ) * opts.tagSizes.count + 1 );
 
-    classNumber = Math.floor( ( (count - params.min) / (params.max - 2) ) * optCloudClassCount + 1 );
+    classNumber = Math.floor( ( (count - params.min) / (params.max - 2) ) * opts.tagSizes.count + 1 );
 
-    classNumber = Math.floor( ( (count - params.min) / (params.max - params.min) ) * optCloudClassCount + 1 );
+    classNumber = Math.floor( ( (count - params.min) / (params.max - params.min) ) * opts.tagSizes.count + 1 );
     */
 
-    return optCloudClassPrefix + classNumber;
+    return opts.tagSizes.classPrefix + classNumber;
 
   };
-
 
   /**
    *  ! END: CALCULATE TAG CLASS FUNCTION !
    */
 
-
   /**
    *  ! START: GENERATE TAGS FUNCTION !
    */
 
-
   const generateTags = function () {
-
-    const optArticleSelector = '.post',
-      optArticleTagsSelector = '.post-tags .list',
-      optTagsListSelector = '.tags.list';
 
     /* [DONE] create a new variable allTags with an empty object */
 
@@ -229,15 +241,15 @@
 
     /* [DONE] START LOOP: for every article: */
 
-    const articles = document.querySelectorAll(optArticleSelector);
+    const articles = document.querySelectorAll(select.all.article);
 
     for (let article of articles) {
 
-      //console.log('Article: ', article, optArticleSelector);
+      //console.log('Article: ', article, select.all.article);
 
       /* [DONE] find tags wrapper */
 
-      const tagsWrapper = article.querySelector(optArticleTagsSelector);
+      const tagsWrapper = article.querySelector(select.article.tags);
       //console.log('Tags Wrapper: ', tagsWrapper);
 
       /* [DONE] make html variable with empty string */
@@ -300,7 +312,7 @@
 
     // Gdy w HTML występuje zapis "list tags" w jednej linii -> const: .tags.list <- no space
     //! Bład 'Uncaught TypeError: Cannot set properties of null (setting 'innerHTML') może świadczyć o wybraniu złego selektora w kodzie HTML - tagList przyjmuje wartość NULL.
-    const tagList = document.querySelector(optTagsListSelector);
+    const tagList = document.querySelector(select.listOf.tags);
     //console.table('Wyświetla zawartość tagList: ', tagList);
 
     const tagsParams = calculateTagsParams(allTags);
@@ -345,7 +357,6 @@
   /**
    *  ! END: GENERATE TAGS FUNCTION !
    */
-
 
   /**
    *  ! START: TAG CLICK HANDLER FUNCTION !
@@ -420,7 +431,6 @@
    *  ! END: TAG CLICK HANDLER FUNCTION !
    */
 
-
   /**
    *  ! START: ADD CLICK LISTENERS TO TAGS FUNCTION !
    */
@@ -430,7 +440,7 @@
     /* [DONE] find all links to tags */
 
     //! Metoda wyszukiwania linków powinna być analogiczna do tej przy autorach, tj. wcześniej wygenrować linki z prefiksem np. "#author-" czy "#tag-", a nie sam hash...
-    const links = document.querySelectorAll('a[href^="#tag-"]'); //! link (a), <selektor>[atrybut (href) "(^=) zaczynający się od" "#tag-"]</selektor>.
+    const links = document.querySelectorAll(select.all.linksTo.tags); //! link (a), <selektor>[atrybut (href) "(^=) zaczynający się od" "#tag-"]</selektor>.
 
     /* [DONE] START LOOP: for each link */
 
@@ -450,7 +460,6 @@
   /**
    *  ! END: ADD CLICK LISTENERS TO FUNCTION !
    */
-
 
   /**
    *  ! START: CALCULATE AUTHORS PARAMS FUNCTION !
@@ -495,10 +504,6 @@
 
   const generateAuthors = function () {
 
-    const optArticleSelector = '.post',
-      optArticleAuthorSelector = '.post-author',
-      optAuthorsListSelector = '.authors.list';
-
     /* [DONE] create a new variable allTags with an empty object */
 
     let allAuthors = {};
@@ -506,19 +511,18 @@
 
     /* [DONE] START LOOP: for every article */
 
-    const articles = document.querySelectorAll(optArticleSelector);
+    const articles = document.querySelectorAll(select.all.article);
 
     for (let article of articles) {
 
       /* [DONE] find author's wrapper */
 
-      const authorsWrapper = article.querySelector(optArticleAuthorSelector);
+      const authorsWrapper = article.querySelector(select.article.authors);
       //console.log('Authors Wrapper: ', authorsWrapper);
 
       /* [DONE] make html variable with an empty string */
 
-      //todo: przenieść przyimek do linku HTML
-      //! Przyimek "by" -> przykładowy podpis pod tytułem artykułu: "by Kitty Toebean"
+      //! Przyimek "by" -> przykładowy podpis pod tytułem artykułu: "by Kitty Toebean".
       let html = 'by ';
       //console.log('almost Clean HTML: done');
 
@@ -565,7 +569,7 @@
 
     // Gdy w HTML występuje zapis "list authors" w linii -> const: .authors.list <- no space
     //! Bład 'Uncaught TypeError: Cannot set properties of null (setting 'innerHTML') może świadczyć o wybraniu złego selektora w kodzie HTML - AuthorsList przyjmuje wartość NULL.
-    const authorsList = document.querySelector(optAuthorsListSelector);
+    const authorsList = document.querySelector(select.listOf.authors);
     //console.table('Wyświetla zawartość authorsList: ', authorsList);
 
     const authorsParams = calculateAuthorsParams(allAuthors);
@@ -609,7 +613,6 @@
   /**
    *  ! END: GENERATE AUTHORS FUNCTION !
    */
-
 
   /**
    *  ! START: AUTHOR CLICK HANDLER FUNCTION !
@@ -691,7 +694,6 @@
    *  ! END: AUTHOR CLICK HANDLER FUNCTION !
    */
 
-
   /**
    *  ! START: ADD CLICK LISTENERS TO AUTHORS FUNCTION !
    */
@@ -701,7 +703,7 @@
     /* [DONE] find all the links to authors */
 
     //! Metoda wyszukiwania linków powinna być analogiczna do tej przy tagach, tj. wcześniej wygenrować linki z prefiksem np. "#tag-" czy "#author-", a nie sam hash...
-    const links = document.querySelectorAll('a[href^="#author-"]'); //! Łącznik ^= oznacza: "znajdź elementy, które mają atrybut "href", który z kolei rozpoczyna się od '#author-' ".
+    const links = document.querySelectorAll(select.all.linksTo.authors); //! Łącznik ^= oznacza: "znajdź elementy, które mają atrybut "href", który z kolei rozpoczyna się od '#author-' ".
     //console.log('Znalezione linki z autorami zawierające "#author-": ', links);
 
     /* [DONE] START LOOP: for each link */
