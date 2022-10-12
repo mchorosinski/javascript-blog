@@ -3,8 +3,14 @@
   'use strict';
 
   /**
-   *  ! OPTIONS & SELECTORS:
+   *  ! OPTIONS, SELECTORS & TEMPLATES:
    */
+
+  const templates = {
+    articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+    tagLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
+    authorLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML),
+  };
 
   const opts = {
     tagSizes: {
@@ -124,7 +130,11 @@
 
       /* [DONE] create HTML of the link */
 
-      const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+      //! Wykorzystanie szablonu:
+      const linkHTMLData = {id: articleId, title: articleTitle};
+      const linkHTML = templates.articleLink(linkHTMLData);
+
+      //const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
       //console.log('Link HTML: ', linkHTML);
 
       /* [DONE] insert link into titleList */
@@ -274,8 +284,12 @@
 
         /* [DONE] generate HTML of the link */
 
+        //! Wykorzystanie szablonu:
+        const linkHTMLData = {id: tag, tag: tag};
+        const linkHTML = templates.tagLink(linkHTMLData);
+
         //! Generowane linki powinny mieć analaogiczną strukturę, tzn. wymagane w tym przypadku prefiksy np. "#tag-" i "#author-", a nie sam hash...
-        const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li> ';
+        //const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li> ';
         //console.log('Link HTML: ', linkHTML);
 
         /* [DONE] add generated code to html variable */
@@ -523,7 +537,7 @@
       /* [DONE] make html variable with an empty string */
 
       //! Przyimek "by" -> przykładowy podpis pod tytułem artykułu: "by Kitty Toebean".
-      let html = 'by ';
+      let html = 'xyz ';
       //console.log('almost Clean HTML: done');
 
       /* [DONE] get authors' names from 'data-author' attribute */
@@ -533,8 +547,12 @@
 
       /* [DONE] generate HTML of the link */
 
+      //! Wykorzystanie szablonu:
+      const linkHTMLData = {id: authorName, author: authorName};
+      const linkHTML = templates.authorLink(linkHTMLData);
+
       //! Generowane linki powinny mieć analaogiczną strukturę, tzn. wymagane w tym przypadku prefiksy np. "#author-" i "#tag-", a nie sam hash...
-      const linkHTML = '<a href="#author-' + authorName + '">' + authorName + '</a>';
+      //const linkHTML = '<a href="#author-' + authorName + '">' + authorName + '</a>';
       //console.log('Wygenerowano link HTML z imieniem i nazwiskiem autora', linkHTML);
 
       /* [DONE] add genrated code to html variable */
