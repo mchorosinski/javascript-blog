@@ -3,13 +3,15 @@
   'use strict';
 
   /**
-   *  ! OPTIONS, SELECTORS & TEMPLATES:
+   *  ! TEMPLATES, OPTIONS & SELECTORS:
    */
 
   const templates = {
     articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
     tagLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
     authorLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML),
+    tagCloudLink: Handlebars.compile(document.querySelector('#template-tag-cloud-link').innerHTML),
+    authorsListLink: Handlebars.compile(document.querySelector('#template-authors-list-link').innerHTML),
   };
 
   const opts = {
@@ -80,7 +82,7 @@
 
     /* [DONE] find the correct article using the selector (value of 'href' attribute) */
 
-    const targetArticle = document.querySelector(select.all.article);
+    const targetArticle = document.querySelector(articleSelector);
     //console.log('targetArticle:', targetArticle);
 
     /* [DONE] add class 'active' to the correct article */
@@ -334,7 +336,11 @@
 
     /* [DONE] create variable for all links HTML code */
 
-    let allTagsHTML = '';
+    //let allTagsHTML = '';
+
+    //! Wykorzystanie szablonu "tagCloudLink":
+    const allTagsData = {tags: []};
+
 
     /* [DONE] START LOOP: for each tag in allTags: */
 
@@ -351,10 +357,17 @@
       //const tagLinkHTML = '<li><a class="' + calculateTagClass(allTags[tag], tagsParams) + '" href="#tag-'+ tag +'">' + tag + ' (' + allTags[tag] + ')</a></li>';
 
       //! Kod HTML bez policzonej wartości występowania tagów.
-      const tagLinkHTML = '<li><a class="' + calculateTagClass(allTags[tag], tagsParams) + '" href="#tag-'+ tag +'">' + tag + '</a></li>';
-      console.log('tagLinkHTML:', tagLinkHTML);
+      //const tagLinkHTML = '<li><a class="' + calculateTagClass(allTags[tag], tagsParams) + '" href="#tag-'+ tag +'">' + tag + '</a></li>';
+      //console.log('tagLinkHTML:', tagLinkHTML);
 
-      allTagsHTML += tagLinkHTML;
+      //allTagsHTML += tagLinkHTML;
+
+      //! Wykorzystanie szablonu "tagCloudLink":
+      allTagsData.tags.push({
+        tag: tag,
+        count: allTags[tag],
+        className: calculateTagClass(allTags[tag], tagsParams)
+      });
 
       /* [DONE] END LOOP: for each tag in allTags: */
 
@@ -362,7 +375,11 @@
 
     /*[DONE] add HTML from allTagsHTML to tagList */
 
-    tagList.innerHTML = allTagsHTML;
+    //tagList.innerHTML = allTagsHTML;
+
+    //! Wykorzystanie szablonu "tagCloudLink":
+    tagList.innerHTML = templates.tagCloudLink(allTagsData);
+    console.table('allTagsData:', allTagsData);
 
   };
 
@@ -537,7 +554,7 @@
       /* [DONE] make html variable with an empty string */
 
       //! Przyimek "by" -> przykładowy podpis pod tytułem artykułu: "by Kitty Toebean".
-      let html = 'xyz ';
+      let html = 'by ';
       //console.log('almost Clean HTML: done');
 
       /* [DONE] get authors' names from 'data-author' attribute */
@@ -595,7 +612,11 @@
 
     /* [DONE] create variable for all links HTML code */
 
-    let allAuthorsHTML = '';
+    //let allAuthorsHTML = '';
+
+    //! Wykorzystanie szablonu "authorsListLink":
+
+    const allAuthorsData = {authors: []};
 
     /* [DONE] START LOOP: for each author in allAuthors: */
 
@@ -610,19 +631,28 @@
       //console.table('All AUTHORS HTML: ', allAuthorsHTML);
 
       //! Kod HTML z policzoną wartością występowania autorów.
-      const authorLinkHTML = '<li><a href="#author-'+ author +'">' + author + '</a> (' + allAuthors[author] + ')</li>';
+      //const authorLinkHTML = '<li><a href="#author-'+ author +'">' + author + '</a> (' + allAuthors[author] + ')</li>';
 
       //! Kod HTML bez policzonej wartości występowania autorów oraz miejscem na klasę.
       //const authorLinkHTML = '<li><a class="' + calculateAuthorClass(allAuthors[author], authorsParams) + '" href="#authors-'+ author +'">' + author + '</a></li>';
-      console.log('authorLinkHTML:', authorLinkHTML);
+      //console.log('authorLinkHTML:', authorLinkHTML);
 
-      allAuthorsHTML += authorLinkHTML;
+      //allAuthorsHTML += authorLinkHTML;
+
+      //! Wykorzystanie szablonu "authorsListLink":
+      allAuthorsData.authors.push({
+        author: author,
+        count: allAuthors[author],
+      });
 
       /* [DONE] END LOOP: for each author in allAuthors: */
 
     }
 
-    authorsList.innerHTML = allAuthorsHTML;
+    //authorsList.innerHTML = allAuthorsHTML;
+
+    //! Wykorzystanie szablonu "authorsListLink":
+    authorsList.innerHTML = templates.authorsListLink(allAuthorsData);
 
   };
 
